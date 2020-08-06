@@ -1,0 +1,24 @@
+# depslib dependency file v1.0
+1581583449 source:e:\source\codeblocks\samplev4prot\main.cpp
+	<iostream>
+	"Functionsv4prot.h"
+	"ConsoleFlow.h"
+
+1581578633 source:e:\source\codeblocks\samplev4prot\portfunctions\portconnection.cpp
+	"PortConnection.h"
+
+1581578650 e:\source\codeblocks\samplev4prot\portfunctions\portconnection.h
+	<windows.h>
+	<winbase.h>
+
+1581585515 source:e:\source\codeblocks\samplev4prot\functionsv4prot.cpp
+	"Functionsv4prot.h"
+
+1581580770 e:\source\codeblocks\samplev4prot\functionsv4prot.h
+	"PortConnection.h"
+	"CRC16.h"
+
+1562334404 e:\source\codeblocks\samplev4prot\crc16.h
+
+1581583208 e:\source\codeblocks\samplev4prot\consoleflow.h
+
