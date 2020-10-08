@@ -21,8 +21,8 @@ This code shows how to read/write transponders in Windows systems.
 * [JAR Library and API documentation](https://www.microsensys.de/downloads/DevSamples/Libraries/Windows/microsensysRFID%20-%20jar%20library/)
 * [Native library and API documentation](https://www.microsensys.de/downloads/DevSamples/Libraries/Windows/iID%20driver%20engine%20-%20Native%20driver/)
 * Check what is possible using our iID®DEMOsoft for PC! Download it using [this link](https://www.microsensys.de/downloads/CDContent/Install/iID%c2%ae%20DEMOsoft.zip)
-* GitHub *doc* repository: [Micro-Sensys/doc](https://github.com/Micro-Sensys/doc)
-	* [communication-modes/doc](https://github.com/Micro-Sensys/doc/tree/master/communication-modes/doc)
+* GitHub *documentation* repository: [Micro-Sensys/documentation](https://github.com/Micro-Sensys/documentation)
+	* [communication-modes/documentation](https://github.com/Micro-Sensys/documentation/tree/master/communication-modes/doc)
 
 ## Contact
 
