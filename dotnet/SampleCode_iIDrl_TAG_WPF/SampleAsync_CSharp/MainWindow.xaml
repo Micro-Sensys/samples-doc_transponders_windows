@@ -1,0 +1,239 @@
+﻿<Window x:Class="SampleAsync_CSharp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:SampleAsync_CSharp"
+        mc:Ignorable="d" Closing="Window_Closing"
+        Title="SampleCode_iIDrl_TAG_WPF - Async" Height="450" Width="800">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+        <TabControl Grid.Row="0" Name="tabControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+            <TabItem Name="tabItem_Initialize" Header="Initiailze" >
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Port Type: " Margin="5" />
+                        <RadioButton Grid.Column="1" Name="radioButtonInitialize_PortSerial" Content="Serial" GroupName="PortType" Margin="5" />
+                        <RadioButton Grid.Column="2" Name="radioButtonInitialize_PortBt" Content="Bluetooth" GroupName="PortType" Margin="5" />
+                        <RadioButton Grid.Column="3" Name="radioButtonInitialize_PortUsb" Content="USB" GroupName="PortType" Margin="5" IsChecked="True" />
+                    </Grid>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Port Name: " Margin="5" />
+                        <TextBox Grid.Column="1" Name="textBoxInitialize_PortName" Text="COM1" Width="50" Margin="5" />
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Interface Type: " Margin="5" />
+                        <RadioButton Grid.Column="1" Name="radioButtonInitialize_Interface1356" Content="HF (13.56MHz)" GroupName="InterfaceType" Margin="5" IsChecked="True" />
+                        <RadioButton Grid.Column="2" Name="radioButtonInitialize_Interface868" Content="UHF (868 MHz)" GroupName="InterfaceType" Margin="5"  />
+                    </Grid>
+                    <Grid Grid.Row="3">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <Button Grid.Column="0" Name="buttonInitialize" Content="Initialize" Width="100" Margin="5" Click="ButtonInitialize_ClickAsync" />
+                        <Button Grid.Column="1" Name="buttonTerminate" Content="Terminate" Width="100" Margin="5" Click="ButtonTerminate_Click" />
+                    </Grid>
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="Auto" />
+                            <ColumnDefinition Width="Auto" />
+                        </Grid.ColumnDefinitions>
+
+                        <TextBlock Grid.Column="0" Text="Library version: " Margin="5" />
+                        <TextBlock Grid.Column="1" Name="textBlockInitialize_DriverVersion" Margin="5" />
+                    </Grid>
+                    <Grid Grid.Row="5">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+
+                        <TextBlock Grid.Row="0" Text="Parameters used for initialize: " Margin="5" />
+                        <TextBlock Grid.Row="1" Name="textBlockInitialize_ParamInterfaceType" Margin="20,5" />
+                        <TextBlock Grid.Row="2" Name="textBlockInitialize_ParamPortType" Margin="20,5" />
+                        <TextBlock Grid.Row="3" Name="textBlockInitialize_ParamPortName" Margin="20,5" />
+                        <TextBlock Grid.Row="4" Name="textBlockInitialize_ParamProtocolType" Margin="20,5" />
+                    </Grid>
+                </Grid>
+            </TabItem>
+            <TabItem Name="tabItem_Std" Header="Standard functions" >
+                <!-- Identify, readbytes, writebytes-->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="250" />
+                    </Grid.ColumnDefinitions>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="*" />
+                        </Grid.RowDefinitions>
+
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Name="button_Identify" Content="Identify" Margin="5" Click="Button_Identify_ClickAsync" />
+                            <!--<TextBlock Grid.Column="1" Name="textBlock_UID" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="15" />-->
+                            <ComboBox Grid.Column="1" Name="comboBox_TagID" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="15" IsEnabled="False" />
+                        </Grid>
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="Auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="From (byte): " Margin="5" />
+                            <TextBox Grid.Column="1" Name="textBox_From" VerticalAlignment="Center" Width="50" Margin="5,0,0,0" FontSize="15" Text="0" />
+                            <TextBlock Grid.Column="2" Text="Length (bytes): " Margin="5" />
+                            <TextBox Grid.Column="3" Name="textBox_Length" VerticalAlignment="Center" Width="50" Margin="5,0,0,0" FontSize="15" Text="8" />
+                            <TextBlock Grid.Column="4" Text="Page (UHF / LEGIC FS): " Margin="5" />
+                            <TextBox Grid.Column="5" Name="textBox_Page" VerticalAlignment="Center" Width="50" Margin="5,0,0,0" FontSize="15" Text="3" />
+                        </Grid>
+                        <Grid Grid.Row="2">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="100" />
+                                <ColumnDefinition Width="100" />
+                            </Grid.ColumnDefinitions>
+
+                            <Button Grid.Column="0" Name="button_ReadBytes" Content="Read Bytes" Margin="5" Click="Button_ReadBytes_ClickAsync" />
+                            <Button Grid.Column="1" Name="button_WriteBytes" Content="Write Bytes" Margin="5" Click="Button_WriteBytes_ClickAsync" />
+                        </Grid>
+                        <Grid Grid.Row="3">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+
+                            <TextBlock Grid.Column="0" Text="Data to Write (hex): " Margin="5" />
+                            <TextBox Grid.Column="1" Name="textBox_DataToWriteHex" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="15" Text="11-22-33-44-55-66-77-88" />
+                        </Grid>
+                        <Grid Grid.Row="4">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="*" />
+                            </Grid.RowDefinitions>
+
+                            <TextBlock Grid.Row="0" Text="Data Read (hex): " Margin="5" />
+                            <TextBox Grid.Row="1" Name="textBox_DataRead" VerticalAlignment="Stretch" Margin="5,0,0,0" FontSize="12" Text="0" IsEnabled="False" />
+                        </Grid>
+                    </Grid>
+                    <TextBox Grid.Column="1" Name="textBox_ThreadLog" VerticalAlignment="Stretch" FontSize="12" Text="" Background="LightCyan" VerticalScrollBarVisibility="Auto" />
+                </Grid>
+            </TabItem>
+            <TabItem Name="tabItem_SystemMask" Header="SystemMask">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <GroupBox Grid.Column="0" Header="System Mask HF">
+                        <Grid Name="grid_SystemMaskHf">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <CheckBox Grid.Row="0" Name="checkBox_SystemMask_Hf_ISO15693" Content="ISO 15693" Tag="0x001" />
+                            <CheckBox Grid.Row="1" Name="checkBox_SystemMask_Hf_iIDL" Content="iID®-L" Tag="0x002" />
+                            <CheckBox Grid.Row="2" Name="checkBox_SystemMask_Hf_iIDD" Content="iID®-D" Tag="0x004" />
+                            <CheckBox Grid.Row="3" Name="checkBox_SystemMask_Hf_iIDG" Content="iID®-G" Tag="0x008" />
+                            <CheckBox Grid.Row="4" Name="checkBox_SystemMask_Hf_iIDN" Content="iID®-N" Tag="0x010" />
+                            <CheckBox Grid.Row="5" Name="checkBox_SystemMask_Hf_ICODE_UID" Content="I-CODE UID" Tag="0x020" />
+                            <CheckBox Grid.Row="6" Name="checkBox_SystemMask_Hf_LEGIC" Content="LEGIC PRIME" Tag="0x040" />
+                            <CheckBox Grid.Row="7" Name="checkBox_SystemMask_Hf_ICODE_1" Content="I-CODE 1" Tag="0x080" />
+                            <CheckBox Grid.Row="8" Name="checkBox_SystemMask_Hf_ISO14443A" Content="ISO 14443-A" Tag="0x100" />
+                            <CheckBox Grid.Row="9" Name="checkBox_SystemMask_Hf_PicoTAG" Content="inside PicoTAG" Tag="0x200" />
+                            <CheckBox Grid.Row="10" Name="checkBox_SystemMask_Hf_iIDP" Content="iID®-P" Tag="0x400" />
+                            <CheckBox Grid.Row="11" Name="checkBox_SystemMask_Hf_ISO14443B" Content="ISO 14443-B" Tag="0x800" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Column="1" Name="groupBox_SystemMaskExtras" Header="System Mask Extras">
+                        <Grid Name="grid_SystemMaskExtras">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <CheckBox Grid.Row="0" Name="checkBox_SystemMask_Hf_ISO15693_adressed" Content="HF ISO 15693 Adressed" Tag="0x10000000" />
+                            <CheckBox Grid.Row="1" Name="checkBox_SystemMask_Hf_ISO15693_RWblocks" Content="HF ISO 15693 RWblocks" Tag="0x20000000" />
+                            <CheckBox Grid.Row="2" Name="checkBox_SystemMask_Hf_LEGIC_FileSystem" Content="HF LEGIC File System" Tag="0x40000000" />
+                            <CheckBox Grid.Row="3" Name="checkBox_SystemMask_Hf_DualEcho" Content="HF Dual Echo" Tag="0x80000000" />
+                        </Grid>
+                    </GroupBox>
+                    <GroupBox Grid.Column="2" Header="System Mask UHF" >
+                        <Grid Name="grid_SystemMaskUhf" IsEnabled="False">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto" />
+                            </Grid.RowDefinitions>
+                            <CheckBox Name="checkBox_SystemMask_Uhf_ISO180006C" Content="ISO 180006-C" IsChecked="True" />
+                        </Grid>
+                    </GroupBox>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <TextBlock Grid.Row="1" Name="textBlock_ReaderInfo" Text="Loading..." Margin="5" />
+            <TextBlock Grid.Row="1" Name="textBlock_Status" Text="" Margin="5" />
+        </StackPanel>
+    </Grid>
+</Window>
