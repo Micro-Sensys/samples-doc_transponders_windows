@@ -9,17 +9,18 @@ This repository contains sample codes for handling both HF and UHF transponders 
 
 ## Implementation
 All sample code available in this repository show how to read/write transponders in Windows systems. 
-> The recommended way is to use either one of our libraries (Java or native) available (See [Useful Links](#Useful-Links)). 
+> The recommended way is to use either one of our libraries (.NET, Java or native) available (See [Useful Links](#Useful-Links)). 
 > If this is not possible, there are some samples available on how to communicate with our RFID readers using low level protocol. This protocol is only available on request. [Contact](#Contact) us with your requirements and we will try to support you.
 
 ## Available sample codes
 This repository contains subfolders for different languages
+ * [.NET](dotnet)
  * [Java](java)
  * [Low level](lowlevel)
  * [native](native)
 
 ## Useful Links
-
+* [.NET Library API documentation](https://www.microsensys.de/downloads/DevSamples/Libraries/Windows/)
 * [JAR Library and API documentation](https://www.microsensys.de/downloads/DevSamples/Libraries/Windows/microsensysRFID%20-%20jar%20library/)
 * [Native library and API documentation](https://www.microsensys.de/downloads/DevSamples/Libraries/Windows/iID%20driver%20engine%20-%20Native%20driver/)
 * Check what is possible using our iID®DEMOsoft for PC! Download it using [this link](https://www.microsensys.de/downloads/CDContent/Install/iID%c2%ae%20DEMOsoft.zip)
