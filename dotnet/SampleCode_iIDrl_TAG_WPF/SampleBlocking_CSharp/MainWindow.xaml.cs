@@ -205,6 +205,7 @@ namespace SampleBlocking_CSharp
                     if ((DateTime.UtcNow - lastCheckedOk) < readerCheckSpan)
                     {
                         //Next check time still not reached --> just do nothing
+                        System.Threading.Thread.Sleep(200);
                         continue;
                     }
                     else
@@ -236,6 +237,7 @@ namespace SampleBlocking_CSharp
                                     //Previously found --> Asume Reader is lost!
                                     m_ReaderFound = false;
                                     SetUiEnabled(false, 0);
+                                    return;
                                 }
                             }
                             System.Threading.Thread.Sleep(200);
@@ -274,7 +276,7 @@ namespace SampleBlocking_CSharp
                                 //Select first ID to be used in ReadBytes/WriteBytes
                                 comboBox_TagID.SelectedIndex = 0;
 
-                                string toLog = string.Format("Result: OK. Duration: {0}", processSpan);
+                                string toLog = string.Format("Result: OK. Duration: {0}\n", processSpan);
                                 toLog += "- HF ScanResult -\n";
                                 toLog += string.Format("\t{0}", BitConverter.ToString(hfResult.TagID));
                                 toLog += "\n";

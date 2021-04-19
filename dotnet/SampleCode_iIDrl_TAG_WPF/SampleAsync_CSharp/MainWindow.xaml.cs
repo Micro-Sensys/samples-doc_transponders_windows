@@ -205,6 +205,7 @@ namespace SampleAsync_CSharp
                     if ((DateTime.UtcNow - lastCheckedOk) < readerCheckSpan)
                     {
                         //Next check time still not reached --> just do nothing
+                        System.Threading.Thread.Sleep(200);
                         continue;
                     }
                     else
@@ -236,6 +237,7 @@ namespace SampleAsync_CSharp
                                     //Previously found --> Asume Reader is lost!
                                     m_ReaderFound = false;
                                     SetUiEnabled(false, 0);
+                                    return;
                                 }
                             }
                             System.Threading.Thread.Sleep(200);

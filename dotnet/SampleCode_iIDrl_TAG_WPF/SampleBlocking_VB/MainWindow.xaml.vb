@@ -178,6 +178,7 @@ Class MainWindow
                 If ((DateTime.UtcNow - lastCheckedOk) < readerCheckSpan) Then
 
                     'Next check time still Not reached --> just do nothing
+                    Threading.Thread.Sleep(200)
                     Continue While
 
                 Else
@@ -203,6 +204,7 @@ Class MainWindow
                                 'Previously found --> assume reader is lost!
                                 m_ReaderFound = False
                                 SetUiEnabled(False, 0)
+                                Return
                             End If
                         End If
                         Threading.Thread.Sleep(200)
