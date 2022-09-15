@@ -1,13 +1,13 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <RootNamespace>SampleBlocking_VB</RootNamespace>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsensys.iIDReaderLibrary.DocInterfaceControl" Version="1.0.0" />
+    <PackageReference Include="Microsensys.iIDReaderLibrary.DocInterfaceControl" Version="1.0.2" />
   </ItemGroup>
 
 </Project>
