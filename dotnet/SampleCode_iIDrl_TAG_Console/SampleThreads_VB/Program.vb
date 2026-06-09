@@ -67,7 +67,7 @@ Module Program
         Dim portType As Integer = Console_InitializePortType()
         Dim portName = ""
         Select Case portType
-            Case 0, 2
+            Case PortTypeEnum.PortType_Serial, PortTypeEnum.PortType_Bluetooth, PortTypeEnum.PortType_BluetoothLE
                 'For serial & Bluetooth, PortName needed.
                 portName = Console_InitializePortName()
         End Select
@@ -109,19 +109,22 @@ Module Program
     End Sub
 
     Private Function Console_InitializePortType() As Integer
-        Console.WriteLine("Port Type (0 = Serial, 2 = Bluetooth, 4 = USB)")
+        Console.WriteLine("Port Type (0 = Serial, 2 = Bluetooth, 4 = USB, 5 = BluetoothLE)")
         Console.Write("Selection (confirm with ENTER): ")
         Dim portTypeTet = Console.ReadLine()
         Select Case portTypeTet
             Case "0"
                 Console.WriteLine(vbTab + "Serial selected")
-                Return 0
+                Return PortTypeEnum.PortType_Serial
             Case "2"
                 Console.WriteLine(vbTab + "Bluetooth selected")
-                Return 2
+                Return PortTypeEnum.PortType_Bluetooth
             Case "4"
                 Console.WriteLine(vbTab + "USB selected")
-                Return 4
+                Return PortTypeEnum.PortType_USB
+            Case "5"
+                Console.WriteLine(vbTab + "BluetoothLE selected")
+                Return PortTypeEnum.PortType_BluetoothLE
             Case Else
                 Console.SetCursorPosition(0, Console.CursorTop - 2)
                 Return Console_InitializePortType()
@@ -130,6 +133,9 @@ Module Program
     Private Function Console_InitializePortName() As String
         Dim cursorTop = Console.CursorTop
         Dim portNames As String() = InterfaceCommunicationSettings.GetAvailablePortNames()
+        Dim portNamesList As New List(Of String)
+        portNamesList.AddRange(InterfaceCommunicationSettings.GetAvailablePortNames())
+        portNamesList.AddRange(InterfaceCommunicationSettings.GetAvailableBlePairedDevices())
         Console.WriteLine("Port Name:")
         For i = 0 To portNames.Length - 1
             Console.WriteLine(String.Format("{0} - {1}", i, portNames(i)))

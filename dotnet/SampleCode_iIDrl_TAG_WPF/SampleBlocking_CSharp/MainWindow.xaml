@@ -35,7 +35,8 @@
                         <TextBlock Grid.Column="0" Text="Port Type: " Margin="5" />
                         <RadioButton Grid.Column="1" Name="radioButtonInitialize_PortSerial" Content="Serial" GroupName="PortType" Margin="5" />
                         <RadioButton Grid.Column="2" Name="radioButtonInitialize_PortBt" Content="Bluetooth" GroupName="PortType" Margin="5" />
-                        <RadioButton Grid.Column="3" Name="radioButtonInitialize_PortUsb" Content="USB" GroupName="PortType" Margin="5" IsChecked="True" />
+                        <RadioButton Grid.Column="3" Name="radioButtonInitialize_PortBle" Content="BluetoothLE" GroupName="PortType" Margin="5" />
+                        <RadioButton Grid.Column="4" Name="radioButtonInitialize_PortUsb" Content="USB" GroupName="PortType" Margin="5" IsChecked="True" />
                     </Grid>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
@@ -47,7 +48,7 @@
                         </Grid.ColumnDefinitions>
 
                         <TextBlock Grid.Column="0" Text="Port Name: " Margin="5" />
-                        <TextBox Grid.Column="1" Name="textBoxInitialize_PortName" Text="COM1" Width="50" Margin="5" />
+                        <TextBox Grid.Column="1" Name="textBoxInitialize_PortName" Text="COM1" Width="150" Margin="5" />
                     </Grid>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>
@@ -118,7 +119,6 @@
                             </Grid.ColumnDefinitions>
 
                             <Button Grid.Column="0" Name="button_Identify" Content="Identify" Margin="5" Click="Button_Identify_Click" />
-                            <!--<TextBlock Grid.Column="1" Name="textBlock_UID" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="15" />-->
                             <ComboBox Grid.Column="1" Name="comboBox_TagID" VerticalAlignment="Center" Margin="5,0,0,0" FontSize="15" IsEnabled="False" />
                         </Grid>
                         <Grid Grid.Row="1">

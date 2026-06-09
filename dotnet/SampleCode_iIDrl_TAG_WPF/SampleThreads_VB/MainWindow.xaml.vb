@@ -1,10 +1,11 @@
 ﻿Imports System.ComponentModel
 Imports iIDReaderLibrary
 Imports iIDReaderLibrary.Utils
+Imports iIDReaderLibrary.Utils.Definitions
 
 Class MainWindow
 
-    Private m_Worker As BackgroundWorker = New BackgroundWorker()
+    Private m_Worker As New BackgroundWorker()
     Private m_ReaderFound As Boolean
 
     Private m_DocInterface As DocInterfaceControl = Nothing
@@ -22,9 +23,7 @@ Class MainWindow
     Private Sub Window_Closing(sender As Object, e As ComponentModel.CancelEventArgs)
         'Stop background worker
         m_Worker.CancelAsync()
-        If m_DocInterface IsNot Nothing Then
-            m_DocInterface.Terminate()
-        End If
+        m_DocInterface?.Terminate()
     End Sub
 
     Private Sub SetUiEnabled(_enabled As Boolean, _readerID As Integer)
@@ -94,24 +93,28 @@ Class MainWindow
             '   0 = Serial
             '   2 = Bluetooth
             '   4 = USB
+            '   5 = BluetoothLE
             Dim portType As Byte = 4 'Default USB
             If radioButtonInitialize_PortSerial.IsChecked.Value Then
-                portType = 0
+                portType = PortTypeEnum.PortType_Serial
             End If
             If radioButtonInitialize_PortBt.IsChecked.Value Then
-                portType = 2
+                portType = PortTypeEnum.PortType_Bluetooth
+            End If
+            If radioButtonInitialize_PortBle.IsChecked.Value Then
+                portType = PortTypeEnum.PortType_BluetoothLE
             End If
 
             Dim readerPortSettings = InterfaceCommunicationSettings.GetForSerialDevice(portType, textBoxInitialize_PortName.Text)
             'Interface type --> Get from UI
             '   1356 = 13.56MHz (HF)
             '   868 = 868MHz (UHF)
-            Dim interfaceType As Integer = 1356
+            Dim interfaceType As Integer = InterfaceTypeEnum.Interface_HF
             If radioButtonInitialize_Interface1356.IsChecked.Value Then
-                interfaceType = 1356
+                interfaceType = InterfaceTypeEnum.Interface_HF
             End If
             If radioButtonInitialize_Interface868.IsChecked.Value Then
-                interfaceType = 868
+                interfaceType = InterfaceTypeEnum.Interface_UHF
             End If
 
             'Initialize class. Then call "Initialize"
@@ -156,9 +159,7 @@ Class MainWindow
         'Stop background worker
         m_Worker.CancelAsync()
 
-        If m_DocInterface IsNot Nothing Then
-            m_DocInterface.Terminate()
-        End If
+        m_DocInterface?.Terminate()
         m_ReaderFound = False
         SetUiEnabled(False, 0)
     End Sub
@@ -351,7 +352,7 @@ Class MainWindow
 
     Private Sub ThreadProcessFinished()
         Dispatcher.Invoke(Sub()
-                              progressBarThread.IsIndeterminate = False
+                              progressBar.IsIndeterminate = False
                           End Sub)
     End Sub
 
@@ -371,7 +372,7 @@ Class MainWindow
                 m_DocInterface.StartIdentify(5, 0, False)
                 textBox_ThreadLog.Text += Environment.NewLine + " = StartIdentify =" + Environment.NewLine
                 textBox_ThreadLog.ScrollToEnd()
-                progressBarThread.IsIndeterminate = True
+                progressBar.IsIndeterminate = True
                 mLastDocResultTimestamp = DateTime.Now
             End If
         End If
@@ -396,7 +397,7 @@ Class MainWindow
                 m_DocInterface.StartReadBytes(tagID, page, from, length)
                 textBox_ThreadLog.Text += Environment.NewLine + " = StartReadBytes =" + Environment.NewLine
                 textBox_ThreadLog.ScrollToEnd()
-                progressBarThread.IsIndeterminate = True
+                progressBar.IsIndeterminate = True
                 mLastDocResultTimestamp = DateTime.Now
             End If
         End If
@@ -432,7 +433,7 @@ Class MainWindow
                 Exit Sub
             End Try
 
-            j = j + 1
+            j += 1
         Next str
 
         If m_DocInterface IsNot Nothing Then
@@ -441,7 +442,7 @@ Class MainWindow
                 m_DocInterface.StartWriteBytes(tagID, page, from, dataToWrite)
                 textBox_ThreadLog.Text += Environment.NewLine + " = WriteBytes =" + Environment.NewLine
                 textBox_ThreadLog.ScrollToEnd()
-                progressBarThread.IsIndeterminate = True
+                progressBar.IsIndeterminate = True
                 mLastDocResultTimestamp = DateTime.Now
             End If
         End If
@@ -491,4 +492,5 @@ Class MainWindow
         End If
     End Sub
 #End Region
+
 End Class

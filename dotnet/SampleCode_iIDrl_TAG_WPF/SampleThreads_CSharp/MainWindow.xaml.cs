@@ -1,6 +1,6 @@
 ﻿using iIDReaderLibrary;
 using iIDReaderLibrary.Utils;
-using System;
+using iIDReaderLibrary.Utils.Definitions;
 using System.ComponentModel;
 using System.Windows;
 using System.Windows.Controls;
@@ -12,10 +12,10 @@ namespace SampleThreads_CSharp
     /// </summary>
     public partial class MainWindow : Window
     {
-        private readonly BackgroundWorker m_Worker = new BackgroundWorker();
+        private readonly BackgroundWorker m_Worker = new();
         private bool m_ReaderFound = false;
 
-        DocInterfaceControl m_DocInterface = null;
+        DocInterfaceControl? m_DocInterface = null;
 
         public MainWindow()
         {
@@ -34,10 +34,7 @@ namespace SampleThreads_CSharp
         {
             //Stop background worker
             m_Worker.CancelAsync();
-            if (m_DocInterface != null)
-            {
-                m_DocInterface.Terminate();
-            }
+            m_DocInterface?.Terminate();
         }
 
         private void SetUiEnabled(bool _enabled, int _readerID)
@@ -101,12 +98,9 @@ namespace SampleThreads_CSharp
         #region Initialize
         private void ButtonInitialize_Click(object sender, RoutedEventArgs e)
         {
-            if (m_DocInterface != null)
-            {
-                //First dispose previous instance
-                m_DocInterface.Terminate();
-                m_DocInterface = null;
-            }
+            //First dispose previous instance
+            m_DocInterface?.Terminate();
+            m_DocInterface = null;
             //Get Interface parameters and initialize class
             try
             {
@@ -114,21 +108,24 @@ namespace SampleThreads_CSharp
                 //  0 = Serial
                 //  2 = Bluetooth
                 //  4 = USB
-                byte portType = 4; //Default USB
-                if (radioButtonInitialize_PortSerial.IsChecked.Value)
-                    portType = 0;
-                if (radioButtonInitialize_PortBt.IsChecked.Value)
-                    portType = 2;
+                //  5 = BluetoothLE
+                byte portType = PortTypeEnum.PortType_USB; //Default USB
+                if (radioButtonInitialize_PortSerial.IsChecked == true)
+                    portType = PortTypeEnum.PortType_Serial;
+                if (radioButtonInitialize_PortBt.IsChecked == true)
+                    portType = PortTypeEnum.PortType_Bluetooth;
+                if (radioButtonInitialize_PortBle.IsChecked == true)
+                    portType = PortTypeEnum.PortType_BluetoothLE;
 
                 var readerPortSettings = InterfaceCommunicationSettings.GetForSerialDevice(portType, textBoxInitialize_PortName.Text);
                 //Interface Type --> Get from UI
                 //  1356 = 13.56MHz (HF)
                 //  868 = 868MHz (UHF)
-                int interfaceType = 1356;
-                if (radioButtonInitialize_Interface1356.IsChecked.Value)
-                    interfaceType = 1356;
-                if (radioButtonInitialize_Interface868.IsChecked.Value)
-                    interfaceType = 868;
+                int interfaceType = InterfaceTypeEnum.Interface_HF;
+                if (radioButtonInitialize_Interface1356.IsChecked == true)
+                    interfaceType = InterfaceTypeEnum.Interface_HF;
+                if (radioButtonInitialize_Interface868.IsChecked == true)
+                    interfaceType = InterfaceTypeEnum.Interface_UHF;
 
                 //Initialize class. Then call "initialize"
                 m_DocInterface = new DocInterfaceControl(readerPortSettings, interfaceType);
@@ -181,17 +178,12 @@ namespace SampleThreads_CSharp
             //Stop background worker
             m_Worker.CancelAsync();
 
-            if (m_DocInterface != null)
-            {
-                m_DocInterface.Terminate();
-                //m_DocInterface = null;
-            }
+            m_DocInterface?.Terminate();
             m_ReaderFound = false;
             SetUiEnabled(false, 0);
         }
-        private void Worker_DoWork(object sender, DoWorkEventArgs e)
+        private void Worker_DoWork(object? sender, DoWorkEventArgs e)
         {
-            BackgroundWorker worker = sender as BackgroundWorker;
             int readerCheckFailCount = 0;
             //Check readerID in 5 seconds interval
             TimeSpan readerCheckSpan = TimeSpan.FromSeconds(5);
@@ -202,9 +194,9 @@ namespace SampleThreads_CSharp
             //  Check reader communication is still possible in 5 seconds interval
             //      Hint: This interval is not fixed! It is recomended to check the communication with the reader when no other operation is executed.
             //          => Most important for battery powered devices!
-            while (m_DocInterface.IsInitialized)
+            while (m_DocInterface != null && m_DocInterface.IsInitialized)
             {
-                if (worker.CancellationPending == true)
+                if (sender is BackgroundWorker worker && worker.CancellationPending == true)
                 {
                     //Exit loop if Background worker is cancelled
                     e.Cancel = true;
@@ -266,13 +258,13 @@ namespace SampleThreads_CSharp
                 TimeSpan span = DateTime.Now - mLastDocResultTimestamp;
                 if (_docResult.ResultInfo != null)
                 {
-                    if (_docResult.ResultInfo is HfScanResultInfo)
+                    if (_docResult.ResultInfo is HfScanResultInfo hfResult)
                     {
                         //Result to Identify - InterfaceType = 1356
                         Dispatcher.Invoke(() =>
                         {
                             //Update result in UI - For demo purposes done using "Dispatcher.Invoke"
-                            string tagIdStr = BitConverter.ToString((_docResult.ResultInfo as HfScanResultInfo).TagID);
+                            string tagIdStr = BitConverter.ToString(hfResult.TagID);
                             string toLog = string.Format("{0} (Duration: {1})\n", _docResult.Timestamp, span);
                             toLog += "- HF ScanResult -\n";
                             toLog += string.Format("\t{0}", tagIdStr);
@@ -281,7 +273,7 @@ namespace SampleThreads_CSharp
                             textBox_ThreadLog.ScrollToEnd();
 
                             bool alreadyInComboBox = false;
-                            foreach(string str in comboBox_TagID.Items)
+                            foreach (string str in comboBox_TagID.Items)
                             {
                                 if (str.CompareTo(tagIdStr) == 0)
                                 {
@@ -299,7 +291,7 @@ namespace SampleThreads_CSharp
                             }
                         });
                     }
-                    if (_docResult.ResultInfo is UhfScanResultInfo)
+                    if (_docResult.ResultInfo is UhfScanResultInfo uhfScanResult)
                     {
                         //Result to Identify - InterfaceType = 868
                         Dispatcher.Invoke(() =>
@@ -309,7 +301,6 @@ namespace SampleThreads_CSharp
                             toLog += "- UHF ScanResult -\n";
                             toLog += "  Ant\tUII-Bytes\n";
 
-                            var uhfScanResult = (_docResult.ResultInfo as UhfScanResultInfo);
                             foreach (var tsi in uhfScanResult.TagInfoList)
                             {
                                 string tagIdStr = BitConverter.ToString(tsi.UII.UII);
@@ -337,10 +328,9 @@ namespace SampleThreads_CSharp
                             textBox_ThreadLog.ScrollToEnd();
                         });
                     }
-                    if (_docResult.ResultInfo is ReadBytesResultInfo)
+                    if (_docResult.ResultInfo is ReadBytesResultInfo readResult)
                     {
                         //Result to ReadBytes
-                        var readResult = (_docResult.ResultInfo as ReadBytesResultInfo);
                         if (readResult.ReadResult != null)
                         {
                             //Data read
@@ -364,10 +354,9 @@ namespace SampleThreads_CSharp
                         if (_docResult.ProcessFinished)
                             ThreadProcessFinished();
                     }
-                    if (_docResult.ResultInfo is WriteBytesResultInfo)
+                    if (_docResult.ResultInfo is WriteBytesResultInfo writeResult)
                     {
                         //Result to WriteBytes
-                        var writeResult = (_docResult.ResultInfo as WriteBytesResultInfo);
                         if (writeResult.WriteResult)
                         {
                             //Data written
@@ -413,7 +402,7 @@ namespace SampleThreads_CSharp
                     });
                     System.Diagnostics.Debug.WriteLine(_docResult.ResultException.ToString());
                 }
-                
+
                 mLastDocResultTimestamp = DateTime.Now;
             }
         }
@@ -497,7 +486,7 @@ namespace SampleThreads_CSharp
             //Initialize bytes to write => length defined in TextBox
             byte[] dataToWrite = new byte[length];
             //Get data to write from TextBox & convert from HEX-String
-            string[] aux = textBox_DataToWriteHex.Text.Split(new char[] { ' ', '-' });
+            string[] aux = textBox_DataToWriteHex.Text.Split([' ', '-']);
             if (aux.Length < length)
             {
                 MessageBox.Show(this, "Not enough data available to write in TextBox");
@@ -565,7 +554,7 @@ namespace SampleThreads_CSharp
             if (m_DocInterface != null)
             {
                 uint currentSystemMask = m_DocInterface.SystemMask;
-                uint maskValue = Convert.ToUInt32((string)(sender as CheckBox).Tag, 16);
+                uint maskValue = Convert.ToUInt32((string)((CheckBox)sender).Tag, 16);
                 m_DocInterface.SystemMask = (currentSystemMask | maskValue);
             }
         }
@@ -574,7 +563,7 @@ namespace SampleThreads_CSharp
             if (m_DocInterface != null)
             {
                 uint currentSystemMask = m_DocInterface.SystemMask;
-                uint maskValue = Convert.ToUInt32((string)(sender as CheckBox).Tag, 16);
+                uint maskValue = Convert.ToUInt32((string)((CheckBox)sender).Tag, 16);
                 m_DocInterface.SystemMask = (currentSystemMask & ~maskValue);
             }
         }
