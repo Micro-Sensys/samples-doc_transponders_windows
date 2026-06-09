@@ -1,0 +1,192 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>iID&#174;service Sample DOC</title>
+    <link rel="icon" href="data:,">
+
+    <link rel="stylesheet" href="style/style.css">
+
+    <script src="Charts/Chart.min.js"></script>
+
+    <script src="js/service_api.js"></script>
+
+    <script src="js/helper/tabs.js"></script>
+    <script src="js/helper/timer.js"></script>
+    <script src="js/helper/http.js"></script>
+    <script src="js/helper/base64.js"></script>
+    <script src="js/helper/convert.js"></script>
+</head>
+
+<body>
+	<div class="myContainer">
+		
+		<div class="myHeader">
+            <h1 style="color:#0081c9"><b>iID&#174;service Sample DOC</b></h1>
+            <h2>- SSE GetSensorDataCycle -</h2>
+            <h3 id="destinationPath" ></h3>
+            <script type="text/JavaScript">
+                document.getElementById("destinationPath").innerHTML = PROTOCOL + "://" + IP_ADDRESS + ":" + PORT + "/api/iidservice/";
+            </script>
+		</div>
+
+		<div class="myBody">
+            
+            <table class="myTable" aria-describedby="content table">
+                <tr>
+                    <th>Functions</th>
+                    <th>Results</th>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="infoContainer">
+                            <div>
+                                <p><b>GET <span style="color: slateblue;">/doc/IsConnected</span></b></p>
+                            </div>
+                        </div>
+                        <br>
+                        <button class="button myButton" onClick="JavaScript:GETisConnected()">GET - is connected</button>
+                    </td>
+                    <td rowspan="5">
+                        <p id="ResponseTime">Response time: 000000 ms</p>
+                        <p id="CodeResult"><b>Statuscode:&nbsp;</b></p>
+                        <pre id="MsgResult"></pre>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="infoContainer">
+                            <div>
+                                <p><b>GET <span style="color: slateblue;">/doc/Initialize</span></b></p>
+                            </div>
+                        </div>
+                        <br>
+                        <button class="button myButton" onClick="JavaScript:POSTinitialize()">POST - initialize</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="infoContainer">
+                            <div>
+                                <p><b>GET <span style="color: slateblue;">/doc/ReaderInfo</span></b></p>
+                            </div>
+                        </div>
+                        <br>
+                        <button class="button myButton" onClick="JavaScript:GETreaderInfo()">POST - reader info</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="infoContainer">
+                            <div>
+                                <p><b>SSE <span style="color: slateblue;">/doc/telidtransponder/GetSensorDataCycle</span></b></p>
+                            </div>
+                        </div>
+                        <table class="myTable" aria-describedby="identfiy cycle parameters table">
+                            <th colspan="2" style="text-align: center;color: blue;">Parameters</th>
+                            <tr>
+                                <td >
+                                    <label for="timeScan"><b>Cycle sleep in ms</b></label>
+                                </td>
+                                <td>
+                                    <input class="inputFields" type="number" name="timeScan" id="timeScan" value="100">
+                                </td>
+                            </tr>
+                            <tr>
+                                <td >
+                                    <label for="numScan"><b>Num of tries (0 = infinite)</b></label>
+                                </td>
+                                <td>
+                                    <input class="inputFields" type="number" name="numScan" id="numScan" value="10">
+                                </td>
+                            </tr>
+                        </table>
+                        
+                        <br>
+                        <button class="button myButton" onClick="JavaScript:SSEstartGetSensorCylce()">SSE start</button>
+                        <button class="button myButton" onClick="JavaScript:SSEstop()">SSE stop</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="infoContainer">
+                            <div>
+                                <p><b>POST <span style="color: slateblue;">/doc/Terminate</span></b></p>
+                            </div>
+                        </div>
+                        <br>
+                        <button class="button myButton" onClick="JavaScript:POSTterminate()">POST - terminate</button>
+                    </td>
+                </tr>
+            </table>
+            <div style="width:100%; border: 1px solid blue;">
+                <canvas id="canvas"></canvas>
+            </div>
+            <script>
+                //https://www.chartjs.org/samples/latest/charts/line/basic.html
+                //https://www.chartjs.org/samples/latest/
+                //https://github.com/chartjs/Chart.js
+    
+                var config = {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'TELID sensor',
+                            backgroundColor: 'rgb(54, 162, 235)',
+                            borderColor: 'rgb(54, 162, 235)',
+                            data: [
+                            ],
+                            fill: false,
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        title: {
+                            display: true,
+                            text: 'Demo sensor measurement with "www.chartjs.org" and SSE (only showing first value if multiple available)'
+                        },
+                        tooltips: {
+                            mode: 'index',
+                            intersect: false,
+                        },
+                        hover: {
+                            mode: 'nearest',
+                            intersect: true
+                        },
+                        scales: {
+                            xAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Measuring time (HH:mm:ss.ms)'
+                                }
+                            }],
+                            yAxes: [{
+                                display: true,
+                                scaleLabel: {
+                                    display: true,
+                                    labelString: 'Sensor value'
+                                }
+                            }]
+                        }
+                    }
+                };
+        
+                window.onload = function() {
+                    var ctx = document.getElementById('canvas').getContext('2d');
+                    window.myLine = new Chart(ctx, config);
+                };      
+            </script>
+		</div>
+        
+		
+		<div class="myFooter">
+            &copy; 2023 Copyright:&nbsp;<a href="https://www.microsensys.de">Micro-Sensys GmbH</a>
+            &nbsp;- GitHub:&nbsp;<a href="https://github.com/Micro-Sensys">https://github.com/Micro-Sensys</a>
+		</div>
+		
+    </div>
+</body>
+</html>
